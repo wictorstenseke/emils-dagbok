@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { storage } from '../storage/adapter';
 import { today, addDays, formatDisplay, getSeason, mondayOf } from '../lib/date';
 import { usePress } from '../lib/usePress';
+import { highlightNames } from '../lib/highlightNames';
 import { WeekStrip } from './WeekStrip';
 import './DiaryPage.css';
 
@@ -18,6 +19,8 @@ export function DiaryPage({ onLogout }: Props) {
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentDateRef = useRef(currentDate);
   const textRef = useRef(text);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const backPress = usePress();
   const fwdPress = usePress();
@@ -111,14 +114,28 @@ export function DiaryPage({ onLogout }: Props) {
             <span class="page-date">{formatDisplay(currentDate)}</span>
             <span class="page-season">{season.emoji} {season.name}</span>
           </div>
-          <textarea
-            class="diary-textarea"
-            value={text}
-            onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
-            placeholder="Skriv vad du vill..."
-            spellcheck={false}
-            autocomplete="off"
-          />
+          <div class="diary-editor">
+            <div
+              class="diary-overlay"
+              ref={overlayRef}
+              aria-hidden="true"
+              dangerouslySetInnerHTML={{ __html: highlightNames(text) }}
+            />
+            <textarea
+              class="diary-textarea"
+              ref={textareaRef}
+              value={text}
+              onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
+              onScroll={() => {
+                if (textareaRef.current && overlayRef.current) {
+                  overlayRef.current.scrollTop = textareaRef.current.scrollTop;
+                }
+              }}
+              placeholder="Skriv vad du vill..."
+              spellcheck={false}
+              autocomplete="off"
+            />
+          </div>
         </div>
       </div>
 

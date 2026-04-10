@@ -158,26 +158,57 @@
   line-height: var(--line-height);
 }
 
+/* ── Editor: overlay + textarea stacked ── */
+.diary-editor {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.diary-overlay,
 .diary-textarea {
   font-family: 'Caveat', cursive;
   font-size: 2rem;
   line-height: var(--line-height);
-  color: var(--ink);
   width: 100%;
-  flex: 1;
-  min-height: 0;
+  height: 100%;
   padding: 8px 20px 8px 72px;
-  background: transparent;
   border: none;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.diary-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--ink);
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.diary-overlay strong {
+  font-weight: 700;
+}
+
+.diary-textarea {
+  position: relative;
+  z-index: 2;
+  color: transparent;
+  caret-color: #5C3D11;
+  background: transparent;
   resize: none;
   outline: none;
-  box-sizing: border-box;
-  caret-color: #5C3D11;
   display: block;
+  -webkit-text-fill-color: transparent;
 }
 
 .diary-textarea::placeholder {
   color: #C8A96E;
+  -webkit-text-fill-color: #C8A96E;
 }
 
 /* ── Portrait: hide week strip ── */
@@ -202,6 +233,7 @@
     --line-height: 52px;
   }
 
+  .diary-overlay,
   .diary-textarea {
     font-size: 1.7rem;
   }
