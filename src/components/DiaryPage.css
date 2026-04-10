@@ -166,7 +166,8 @@
 }
 
 .diary-overlay,
-.diary-textarea {
+.diary-textarea,
+.diary-display {
   font-family: 'Caveat', cursive;
   font-size: 2rem;
   line-height: var(--line-height);
@@ -209,6 +210,28 @@
 .diary-textarea::placeholder {
   color: #C8A96E;
   -webkit-text-fill-color: #C8A96E;
+}
+
+/* ── Display mode: shown when not editing ── */
+.diary-display {
+  color: var(--ink);
+  overflow-y: auto;
+  cursor: text;
+}
+
+.diary-display strong {
+  font-weight: 700;
+}
+
+.diary-display .name-avatar {
+  font-style: normal;
+  font-size: 0.8em;
+  margin-right: 1px;
+  vertical-align: baseline;
+}
+
+.diary-display .diary-placeholder {
+  color: #C8A96E;
 }
 
 /* ── Portrait: phone layout ── */
@@ -263,7 +286,8 @@
   }
 
   .diary-overlay,
-  .diary-textarea {
+  .diary-textarea,
+  .diary-display {
     font-size: 1.7rem;
   }
 

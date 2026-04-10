@@ -7,6 +7,7 @@ export interface UserProfile {
 }
 
 const PROFILE_KEY = 'diary:user';
+const SESSION_KEY = 'diary:loggedIn';
 const entryKey = (date: string) => `diary:entries:${date}`;
 
 export const storage = {
@@ -25,5 +26,17 @@ export const storage = {
 
   saveEntry(date: string, text: string): void {
     localStorage.setItem(entryKey(date), text);
+  },
+
+  getSession(): boolean {
+    return localStorage.getItem(SESSION_KEY) === 'true';
+  },
+
+  setSession(loggedIn: boolean): void {
+    if (loggedIn) {
+      localStorage.setItem(SESSION_KEY, 'true');
+    } else {
+      localStorage.removeItem(SESSION_KEY);
+    }
   },
 };
