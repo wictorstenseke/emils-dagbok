@@ -217,6 +217,16 @@
   color: var(--ink);
   overflow-y: auto;
   cursor: text;
+  background-color: var(--cream);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent calc(var(--line-height) - 1px),
+    var(--line-color) calc(var(--line-height) - 1px),
+    var(--line-color) var(--line-height)
+  );
+  background-position: 0 calc(8px - var(--line-height));
+  background-attachment: local;
 }
 
 .diary-display strong {
@@ -226,7 +236,7 @@
 .diary-display .name-avatar {
   font-style: normal;
   font-size: 0.8em;
-  margin-left: 0.1em;
+  margin-left: 0.2em;
   margin-right: 0.2em;
   vertical-align: baseline;
 }
