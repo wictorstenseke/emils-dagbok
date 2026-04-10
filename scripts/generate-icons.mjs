@@ -7,7 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const src = path.join(__dirname, '../public/spiral-notebook.png');
+const src = path.join(__dirname, '../public/new-logo.png');
 const outDir = path.join(__dirname, '../public');
 
 // Padding as a fraction of output size (12% each side = 24% total shrink)
