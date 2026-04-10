@@ -22,6 +22,7 @@
   align-items: center;
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
               background 0.15s ease,
               box-shadow 0.15s ease;
@@ -57,6 +58,7 @@
   background: transparent;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
               background 0.12s ease;
   font-family: 'Caveat', cursive;

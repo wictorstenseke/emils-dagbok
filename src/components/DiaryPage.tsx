@@ -25,6 +25,7 @@ export function DiaryPage({ onLogout }: Props) {
 
   const backPress = usePress();
   const fwdPress = usePress();
+  const lastTodayRef = useRef(today());
 
   currentDateRef.current = currentDate;
   textRef.current = text;
@@ -34,14 +35,19 @@ export function DiaryPage({ onLogout }: Props) {
     (new Date(todayKey).getTime() - new Date(currentDate).getTime()) / 86400000
   );
 
+  // Detect midnight crossing — only auto-navigate if user was viewing today
   useEffect(() => {
     const interval = setInterval(() => {
       const newToday = today();
-      if (newToday !== currentDateRef.current) {
-        flushSave();
-        setCurrentDate(newToday);
-        setWeekAnchor(mondayOf(newToday));
-        setText(storage.getEntry(newToday));
+      if (newToday !== lastTodayRef.current) {
+        const wasViewingToday = currentDateRef.current === lastTodayRef.current;
+        lastTodayRef.current = newToday;
+        if (wasViewingToday) {
+          flushSave();
+          setCurrentDate(newToday);
+          setWeekAnchor(mondayOf(newToday));
+          setText(storage.getEntry(newToday));
+        }
       }
     }, 30000);
     return () => clearInterval(interval);
@@ -63,8 +69,10 @@ export function DiaryPage({ onLogout }: Props) {
   useEffect(() => {
     const ta = textareaRef.current;
     if (editing && ta) {
+      const scrollY = window.scrollY;
       ta.style.height = 'auto';
       ta.style.height = ta.scrollHeight + 'px';
+      window.scrollTo(0, scrollY);
     }
   }, [editing, text]);
 
