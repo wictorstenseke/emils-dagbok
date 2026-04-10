@@ -72,6 +72,7 @@ export function DiaryPage({ onLogout }: Props) {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       storage.saveEntry(currentDateRef.current, value);
+      storage.touchActivity();
     }, 500);
   }, []);
 
@@ -80,6 +81,7 @@ export function DiaryPage({ onLogout }: Props) {
     setEditing(false);
     setCurrentDate(date);
     setWeekAnchor(mondayOf(date));
+    storage.touchActivity();
   }
 
   function goBack() {
