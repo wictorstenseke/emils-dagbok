@@ -59,6 +59,15 @@ export function DiaryPage({ onLogout }: Props) {
     }
   }, [editing]);
 
+  // Auto-resize textarea to fit content
+  useEffect(() => {
+    const ta = textareaRef.current;
+    if (editing && ta) {
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    }
+  }, [editing, text]);
+
   function flushSave() {
     if (saveTimer.current) {
       clearTimeout(saveTimer.current);
