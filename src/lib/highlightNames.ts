@@ -50,7 +50,7 @@ export function highlightNamesWithAvatars(text: string): string {
   const bolded = escaped.replace(pattern, (_match, name: string) => {
     const avatar = AVATARS[name.toLowerCase()];
     if (avatar) {
-      return `<strong><span class="name-avatar">${avatar}</span>${name}</strong>`;
+      return `<strong>${name} <span class="name-avatar">${avatar}</span></strong>`;
     }
     return `<strong>${name}</strong>`;
   });
