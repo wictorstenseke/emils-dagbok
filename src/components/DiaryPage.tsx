@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { storage } from '../storage/adapter';
 import { today, addDays, formatDisplay, getSeason, mondayOf } from '../lib/date';
 import { usePress } from '../lib/usePress';
-import { highlightNames } from '../lib/highlightNames';
+import { highlightNames, highlightNamesWithAvatars } from '../lib/highlightNames';
 import { WeekStrip } from './WeekStrip';
 import './DiaryPage.css';
 
@@ -16,6 +16,7 @@ export function DiaryPage({ onLogout }: Props) {
   const [currentDate, setCurrentDate] = useState(today());
   const [text, setText] = useState(() => storage.getEntry(today()));
   const [weekAnchor, setWeekAnchor] = useState(() => mondayOf(today()));
+  const [editing, setEditing] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentDateRef = useRef(currentDate);
   const textRef = useRef(text);
@@ -50,6 +51,14 @@ export function DiaryPage({ onLogout }: Props) {
     setText(storage.getEntry(currentDate));
   }, [currentDate]);
 
+  useEffect(() => {
+    if (editing && textareaRef.current) {
+      textareaRef.current.focus();
+      const len = textareaRef.current.value.length;
+      textareaRef.current.setSelectionRange(len, len);
+    }
+  }, [editing]);
+
   function flushSave() {
     if (saveTimer.current) {
       clearTimeout(saveTimer.current);
@@ -63,13 +72,16 @@ export function DiaryPage({ onLogout }: Props) {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       storage.saveEntry(currentDateRef.current, value);
+      storage.touchActivity();
     }, 500);
   }, []);
 
   function navigateTo(date: string) {
     flushSave();
+    setEditing(false);
     setCurrentDate(date);
     setWeekAnchor(mondayOf(date));
+    storage.touchActivity();
   }
 
   function goBack() {
@@ -115,26 +127,44 @@ export function DiaryPage({ onLogout }: Props) {
             <span class="page-season">{season.emoji} {season.name}</span>
           </div>
           <div class="diary-editor">
-            <div
-              class="diary-overlay"
-              ref={overlayRef}
-              aria-hidden="true"
-              dangerouslySetInnerHTML={{ __html: highlightNames(text) }}
-            />
-            <textarea
-              class="diary-textarea"
-              ref={textareaRef}
-              value={text}
-              onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
-              onScroll={() => {
-                if (textareaRef.current && overlayRef.current) {
-                  overlayRef.current.scrollTop = textareaRef.current.scrollTop;
-                }
-              }}
-              placeholder="Skriv vad du vill..."
-              spellcheck={false}
-              autocomplete="off"
-            />
+            {editing ? (
+              <>
+                <div
+                  class="diary-overlay"
+                  ref={overlayRef}
+                  aria-hidden="true"
+                  dangerouslySetInnerHTML={{ __html: highlightNames(text) }}
+                />
+                <textarea
+                  class="diary-textarea"
+                  ref={textareaRef}
+                  value={text}
+                  onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
+                  onBlur={() => {
+                    flushSave();
+                    setEditing(false);
+                  }}
+                  onScroll={() => {
+                    if (textareaRef.current && overlayRef.current) {
+                      overlayRef.current.scrollTop = textareaRef.current.scrollTop;
+                    }
+                  }}
+                  placeholder="Skriv vad du vill..."
+                  spellcheck={false}
+                  autocomplete="off"
+                />
+              </>
+            ) : (
+              <div
+                class="diary-display"
+                onClick={() => setEditing(true)}
+                dangerouslySetInnerHTML={{
+                  __html: text
+                    ? highlightNamesWithAvatars(text)
+                    : '<span class="diary-placeholder">Tryck här för att skriva...</span>'
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
