@@ -22,7 +22,7 @@
   transform: translateY(-50%);
   width: 52px;
   height: 52px;
-  border-radius: 50%;
+  border-radius: 8px;
   border: 2px solid #C8A96E;
   background: #FDF6E3;
   font-size: 1.3rem;
@@ -236,8 +236,7 @@
 .diary-display .name-avatar {
   font-style: normal;
   font-size: 0.8em;
-  margin-left: 0.2em;
-  margin-right: 0.2em;
+  margin-left: 0.15em;
   vertical-align: baseline;
 }
 
