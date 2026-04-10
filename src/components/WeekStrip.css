@@ -29,8 +29,8 @@
   overflow: hidden;
 }
 
-.week-arrow:not(:disabled):active {
-  transform: scale(0.85);
+.week-arrow.pressed {
+  transform: scale(0.82);
   background: #F0DDB0;
 }
 
@@ -62,8 +62,8 @@
   font-family: 'Caveat', cursive;
 }
 
-.week-day:not(.disabled):active {
-  transform: scale(0.9);
+.week-day.pressed {
+  transform: scale(0.88);
   background: #E8C98A;
 }
 

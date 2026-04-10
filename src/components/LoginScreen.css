@@ -119,13 +119,13 @@
   transform: scale(0);
 }
 
-.tap-cell:active {
-  transform: scale(0.88);
+.tap-cell.pressed {
+  transform: scale(0.82);
   background: #F0DDB0;
   box-shadow: none;
 }
 
-.tap-cell:active::after {
+.tap-cell.pressed::after {
   opacity: 1;
   transform: scale(2);
   transition: transform 0s, opacity 0s;
@@ -145,8 +145,8 @@
               background 0.12s ease;
 }
 
-.backspace-btn:not(:disabled):active {
-  transform: scale(0.9);
+.backspace-btn.pressed:not(:disabled) {
+  transform: scale(0.88);
   background: #F0DDB0;
 }
 

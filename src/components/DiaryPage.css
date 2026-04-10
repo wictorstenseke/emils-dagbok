@@ -41,13 +41,13 @@
 .nav-btn-left  { left: 10px; }
 .nav-btn-right { right: 10px; }
 
-.nav-btn-left:not(:disabled):active {
-  transform: translateY(-50%) scale(0.82) translateX(-8px);
+.nav-btn-left.pressed {
+  transform: translateY(-50%) scale(0.82) translateX(-10px);
   background: #F0DDB0;
 }
 
-.nav-btn-right:not(:disabled):active {
-  transform: translateY(-50%) scale(0.82) translateX(8px);
+.nav-btn-right.pressed {
+  transform: translateY(-50%) scale(0.82) translateX(10px);
   background: #F0DDB0;
 }
 

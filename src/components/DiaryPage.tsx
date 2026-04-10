@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { storage } from '../storage/adapter';
 import { today, addDays, formatDisplay, getSeason, mondayOf } from '../lib/date';
+import { usePress } from '../lib/usePress';
 import { WeekStrip } from './WeekStrip';
 import './DiaryPage.css';
 
@@ -18,6 +19,9 @@ export function DiaryPage({ onLogout }: Props) {
   const currentDateRef = useRef(currentDate);
   const textRef = useRef(text);
 
+  const backPress = usePress();
+  const fwdPress = usePress();
+
   currentDateRef.current = currentDate;
   textRef.current = text;
 
@@ -26,7 +30,6 @@ export function DiaryPage({ onLogout }: Props) {
     (new Date(todayKey).getTime() - new Date(currentDate).getTime()) / 86400000
   );
 
-  // Midnight flip
   useEffect(() => {
     const interval = setInterval(() => {
       const newToday = today();
@@ -40,7 +43,6 @@ export function DiaryPage({ onLogout }: Props) {
     return () => clearInterval(interval);
   }, []);
 
-  // Load entry when date changes
   useEffect(() => {
     setText(storage.getEntry(currentDate));
   }, [currentDate]);
@@ -75,26 +77,18 @@ export function DiaryPage({ onLogout }: Props) {
     if (currentDate < todayKey) navigateTo(addDays(currentDate, 1));
   }
 
-  function prevWeek() {
-    const newAnchor = addDays(weekAnchor, -7);
-    setWeekAnchor(newAnchor);
-  }
-
-  function nextWeek() {
-    const newAnchor = addDays(weekAnchor, 7);
-    setWeekAnchor(newAnchor);
-  }
-
   const season = getSeason(currentDate);
   const isToday = currentDate === todayKey;
+  const backDisabled = daysBack >= MAX_BACK;
+  const fwdDisabled = isToday;
 
   return (
     <div class="page-wrapper">
       <button
-        class="nav-btn nav-btn-left"
+        class={`nav-btn nav-btn-left ${backPress.pressed && !backDisabled ? 'pressed' : ''}`}
         onClick={goBack}
-        disabled={daysBack >= MAX_BACK}
-        title="Föregående dag"
+        disabled={backDisabled}
+        {...backPress.pressProps}
       >
         ◀
       </button>
@@ -108,8 +102,8 @@ export function DiaryPage({ onLogout }: Props) {
           maxBack={MAX_BACK}
           onSelect={navigateTo}
           weekAnchor={weekAnchor}
-          onPrevWeek={prevWeek}
-          onNextWeek={nextWeek}
+          onPrevWeek={() => setWeekAnchor(addDays(weekAnchor, -7))}
+          onNextWeek={() => setWeekAnchor(addDays(weekAnchor, 7))}
         />
 
         <div class="ruled-area">
@@ -129,10 +123,10 @@ export function DiaryPage({ onLogout }: Props) {
       </div>
 
       <button
-        class={`nav-btn nav-btn-right ${isToday ? 'locked' : ''}`}
+        class={`nav-btn nav-btn-right ${isToday ? 'locked' : ''} ${fwdPress.pressed && !fwdDisabled ? 'pressed' : ''}`}
         onClick={goForward}
-        disabled={isToday}
-        title={isToday ? 'Framtiden är inte skriven än' : 'Nästa dag'}
+        disabled={fwdDisabled}
+        {...fwdPress.pressProps}
       >
         {isToday ? '🔒' : '▶'}
       </button>
