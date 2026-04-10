@@ -6,20 +6,20 @@
   --line-height: 64px;
 }
 
+/* ── Portrait: paper fills screen, buttons fixed on sides ── */
 .page-wrapper {
   min-height: 100dvh;
   background: #E8DCC8;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 64px;
-  gap: 16px;
+  padding: 16px;
 }
 
-/* ── Nav buttons on each side, vertically centred ── */
 .nav-btn {
-  flex-shrink: 0;
-  align-self: center;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
   width: 52px;
   height: 52px;
   border-radius: 50%;
@@ -28,26 +28,36 @@
   font-size: 1.3rem;
   color: #7A5230;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
   display: flex;
   align-items: center;
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.1s, background 0.1s;
+  z-index: 20;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.12s ease;
 }
 
-.nav-btn:active {
-  transform: scale(0.92);
+.nav-btn-left  { left: 10px; }
+.nav-btn-right { right: 10px; }
+
+.nav-btn-left:not(:disabled):active {
+  transform: translateY(-50%) scale(0.82) translateX(-8px);
+  background: #F0DDB0;
+}
+
+.nav-btn-right:not(:disabled):active {
+  transform: translateY(-50%) scale(0.82) translateX(8px);
   background: #F0DDB0;
 }
 
 .nav-btn:disabled {
-  opacity: 0.3;
+  opacity: 0.25;
   cursor: default;
 }
 
 .nav-btn.locked {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: default;
 }
 
@@ -78,7 +88,7 @@
   z-index: 1;
 }
 
-/* Logout button — top-right corner of paper */
+/* Logout button */
 .logout-btn {
   position: fixed;
   top: 10px;
@@ -94,15 +104,15 @@
   opacity: 0.85;
   z-index: 100;
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.logout-btn:hover,
 .logout-btn:active {
+  transform: scale(0.92);
   opacity: 1;
-  background: #E8C98A;
 }
 
-/* ── Ruled area: fills remaining space, lines go to very bottom ── */
+/* ── Ruled area ── */
 .ruled-area {
   flex: 1;
   min-height: 0;
@@ -148,7 +158,6 @@
   line-height: var(--line-height);
 }
 
-/* Textarea fills everything below date header */
 .diary-textarea {
   font-family: 'Caveat', cursive;
   font-size: 2rem;
@@ -178,13 +187,8 @@
   }
 }
 
-/* ── Landscape: hide side buttons, show week strip ── */
+/* ── Landscape: week strip visible, side buttons stay fixed ── */
 @media (orientation: landscape) {
-  .nav-btn-left,
-  .nav-btn-right {
-    display: none;
-  }
-
   .page-wrapper {
     padding: 8px 16px;
     align-items: flex-start;
@@ -204,18 +208,5 @@
 
   .page-date {
     font-size: 1.6rem;
-  }
-}
-
-/* ── Narrow portrait ── */
-@media (orientation: portrait) and (max-width: 480px) {
-  .page-wrapper {
-    padding: 8px 48px;
-    gap: 8px;
-  }
-  .nav-btn {
-    width: 44px;
-    height: 44px;
-    font-size: 1.1rem;
   }
 }

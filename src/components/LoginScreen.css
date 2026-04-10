@@ -57,11 +57,18 @@
 
 .dot {
   color: #D4C0A0;
-  transition: color 0.15s;
+  transition: color 0.15s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
 }
 
 .dot.filled {
   color: #5C3D11;
+  animation: dot-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes dot-pop {
+  0%   { transform: scale(0.4); }
+  100% { transform: scale(1); }
 }
 
 .dots-row.shake {
@@ -94,16 +101,38 @@
   border-radius: 10px;
   color: #5C3D11;
   cursor: pointer;
-  transition: background 0.1s, transform 0.1s;
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.12s ease,
+              box-shadow 0.12s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tap-cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: radial-gradient(circle at center, rgba(160,120,74,0.35) 0%, transparent 70%);
+  opacity: 0;
+  transform: scale(0);
 }
 
 .tap-cell:active {
+  transform: scale(0.88);
   background: #F0DDB0;
-  transform: scale(0.95);
+  box-shadow: none;
+}
+
+.tap-cell:active::after {
+  opacity: 1;
+  transform: scale(2);
+  transition: transform 0s, opacity 0s;
 }
 
 .backspace-btn {
+  font-family: 'Caveat', cursive;
   font-size: 1.6rem;
   background: none;
   border: 2px solid #C8A96E;
@@ -111,6 +140,14 @@
   padding: 6px 20px;
   color: #9C7A4A;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.12s ease;
+}
+
+.backspace-btn:not(:disabled):active {
+  transform: scale(0.9);
+  background: #F0DDB0;
 }
 
 .backspace-btn:disabled {
