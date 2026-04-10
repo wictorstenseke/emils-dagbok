@@ -1,0 +1,221 @@
+:root {
+  --cream: #FDF6E3;
+  --line-color: #D4B896;
+  --ink: #3B2A14;
+  --header-ink: #7A5230;
+  --line-height: 64px;
+}
+
+.page-wrapper {
+  min-height: 100dvh;
+  background: #E8DCC8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 64px;
+  gap: 16px;
+}
+
+/* ── Nav buttons on each side, vertically centred ── */
+.nav-btn {
+  flex-shrink: 0;
+  align-self: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid #C8A96E;
+  background: #FDF6E3;
+  font-size: 1.3rem;
+  color: #7A5230;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s, background 0.1s;
+}
+
+.nav-btn:active {
+  transform: scale(0.92);
+  background: #F0DDB0;
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.nav-btn.locked {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* ── Diary paper ── */
+.diary-page {
+  background: var(--cream);
+  width: 100%;
+  max-width: 600px;
+  height: calc(100dvh - 32px);
+  border-radius: 4px;
+  box-shadow: 2px 4px 20px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Red margin line */
+.diary-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 56px;
+  width: 2px;
+  background: rgba(220, 100, 100, 0.3);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Logout button — top-right corner of paper */
+.logout-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #F0DDB0;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  color: #7A5230;
+  padding: 6px 14px;
+  cursor: pointer;
+  opacity: 0.85;
+  z-index: 100;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.logout-btn:hover,
+.logout-btn:active {
+  opacity: 1;
+  background: #E8C98A;
+}
+
+/* ── Ruled area: fills remaining space, lines go to very bottom ── */
+.ruled-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent calc(var(--line-height) - 1px),
+    var(--line-color) calc(var(--line-height) - 1px),
+    var(--line-color) var(--line-height)
+  );
+  background-position: 0 8px;
+}
+
+/* Date + season: 2 ruled lines */
+.date-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 20px 0 72px;
+  height: calc(var(--line-height) * 2);
+  flex-shrink: 0;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.page-date {
+  font-family: 'Caveat', cursive;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--header-ink);
+  text-transform: capitalize;
+  line-height: var(--line-height);
+}
+
+.page-season {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  color: #A0784A;
+  line-height: var(--line-height);
+}
+
+/* Textarea fills everything below date header */
+.diary-textarea {
+  font-family: 'Caveat', cursive;
+  font-size: 2rem;
+  line-height: var(--line-height);
+  color: var(--ink);
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  padding: 8px 20px 8px 72px;
+  background: transparent;
+  border: none;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  caret-color: #5C3D11;
+  display: block;
+}
+
+.diary-textarea::placeholder {
+  color: #C8A96E;
+}
+
+/* ── Portrait: hide week strip ── */
+@media (orientation: portrait) {
+  .week-strip {
+    display: none;
+  }
+}
+
+/* ── Landscape: hide side buttons, show week strip ── */
+@media (orientation: landscape) {
+  .nav-btn-left,
+  .nav-btn-right {
+    display: none;
+  }
+
+  .page-wrapper {
+    padding: 8px 16px;
+    align-items: flex-start;
+  }
+
+  .diary-page {
+    height: calc(100dvh - 16px);
+  }
+
+  :root {
+    --line-height: 52px;
+  }
+
+  .diary-textarea {
+    font-size: 1.7rem;
+  }
+
+  .page-date {
+    font-size: 1.6rem;
+  }
+}
+
+/* ── Narrow portrait ── */
+@media (orientation: portrait) and (max-width: 480px) {
+  .page-wrapper {
+    padding: 8px 48px;
+    gap: 8px;
+  }
+  .nav-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+}

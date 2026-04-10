@@ -1,0 +1,19 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Caveat', cursive;
+  background: #FDF6E3;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  width: 100%;
+}
+
+button {
+  font-family: 'Caveat', cursive;
+}
