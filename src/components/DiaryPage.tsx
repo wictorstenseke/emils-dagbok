@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { storage } from '../storage/adapter';
 import { today, addDays, formatDisplay, getSeason, mondayOf } from '../lib/date';
 import { usePress } from '../lib/usePress';
-import { highlightNames, highlightNamesWithAvatars } from '../lib/highlightNames';
 import { WeekStrip } from './WeekStrip';
+import { SettingsMenu } from './SettingsMenu';
 import './DiaryPage.css';
 
 const MAX_BACK = 10;
@@ -21,7 +21,6 @@ export function DiaryPage({ onLogout }: Props) {
   const currentDateRef = useRef(currentDate);
   const textRef = useRef(text);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
 
   const backPress = usePress();
   const fwdPress = usePress();
@@ -101,6 +100,18 @@ export function DiaryPage({ onLogout }: Props) {
     storage.touchActivity();
   }
 
+  function handleImported() {
+    // Drop any pending autosave for the now-replaced data, then re-read the
+    // current date so the editor reflects the imported entries.
+    if (saveTimer.current) {
+      clearTimeout(saveTimer.current);
+      saveTimer.current = null;
+    }
+    setEditing(false);
+    setText(storage.getEntry(currentDateRef.current));
+    storage.touchActivity();
+  }
+
   function goBack() {
     if (daysBack < MAX_BACK) navigateTo(addDays(currentDate, -1));
   }
@@ -126,7 +137,10 @@ export function DiaryPage({ onLogout }: Props) {
       </button>
 
       <div class="diary-page">
-        <button class="logout-btn" onClick={onLogout}>Logga ut</button>
+        <div class="page-header">
+          <SettingsMenu onImported={handleImported} />
+          <button class="logout-btn" onClick={onLogout}>Logga ut</button>
+        </div>
 
         <WeekStrip
           currentDate={currentDate}
@@ -145,42 +159,23 @@ export function DiaryPage({ onLogout }: Props) {
           </div>
           <div class="diary-editor">
             {editing ? (
-              <>
-                <div
-                  class="diary-overlay"
-                  ref={overlayRef}
-                  aria-hidden="true"
-                  dangerouslySetInnerHTML={{ __html: highlightNames(text) }}
-                />
-                <textarea
-                  class="diary-textarea"
-                  ref={textareaRef}
-                  value={text}
-                  onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
-                  onBlur={() => {
-                    flushSave();
-                    setEditing(false);
-                  }}
-                  onScroll={() => {
-                    if (textareaRef.current && overlayRef.current) {
-                      overlayRef.current.scrollTop = textareaRef.current.scrollTop;
-                    }
-                  }}
-                  placeholder="Skriv vad du vill..."
-                  spellcheck={false}
-                  autocomplete="off"
-                />
-              </>
-            ) : (
-              <div
-                class="diary-display"
-                onClick={() => setEditing(true)}
-                dangerouslySetInnerHTML={{
-                  __html: text
-                    ? highlightNamesWithAvatars(text)
-                    : '<span class="diary-placeholder">Tryck här för att skriva...</span>'
+              <textarea
+                class="diary-textarea"
+                ref={textareaRef}
+                value={text}
+                onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
+                onBlur={() => {
+                  flushSave();
+                  setEditing(false);
                 }}
+                placeholder="Skriv vad du vill..."
+                spellcheck={false}
+                autocomplete="off"
               />
+            ) : (
+              <div class="diary-display" onClick={() => setEditing(true)}>
+                {text || <span class="diary-placeholder">Tryck här för att skriva...</span>}
+              </div>
             )}
           </div>
         </div>

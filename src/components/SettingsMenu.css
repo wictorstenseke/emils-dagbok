@@ -1,0 +1,129 @@
+/* ── Settings button + menu ── */
+.settings-wrapper {
+  position: fixed;
+  top: 10px;
+  right: 110px;
+  z-index: 100;
+}
+
+.settings-btn {
+  background: #F0DDB0;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  color: #7A5230;
+  padding: 6px 12px;
+  cursor: pointer;
+  opacity: 0.85;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  line-height: 1;
+}
+
+.settings-btn.pressed {
+  transform: scale(0.92);
+  opacity: 1;
+}
+
+.settings-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--cream, #FDF6E3);
+  border: 2px solid #C8A96E;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 170px;
+  z-index: 101;
+  animation: settings-menu-in 0.18s ease-out;
+}
+
+@keyframes settings-menu-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  color: #5C3D11;
+  padding: 8px 14px;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.12s ease;
+}
+
+.settings-item:hover {
+  background: #F5E6C0;
+}
+
+.settings-item.pressed {
+  transform: scale(0.95);
+  background: #F0DDB0;
+}
+
+.settings-item-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.settings-file-input {
+  display: none;
+}
+
+/* ── Toast ── */
+.settings-toast {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--cream, #FDF6E3);
+  border: 2px solid #C8A96E;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  padding: 8px 16px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  color: #5C3D11;
+  white-space: nowrap;
+  z-index: 102;
+  animation: settings-toast-in 0.2s ease-out;
+}
+
+.settings-toast-error {
+  border-color: #D26464;
+  color: #8C2A2A;
+}
+
+@keyframes settings-toast-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Portrait: settings sits inline in the in-paper header row ── */
+@media (orientation: portrait) {
+  .settings-wrapper {
+    position: relative;
+    top: auto;
+    right: auto;
+    flex-shrink: 0;
+  }
+
+  .settings-btn {
+    padding: 8px 14px;
+  }
+}

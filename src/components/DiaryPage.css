@@ -89,6 +89,12 @@
   z-index: 1;
 }
 
+/* Header row holding settings + logout. In landscape its children are
+   position: fixed so the wrapper itself takes no space. */
+.page-header {
+  display: contents;
+}
+
 /* Logout button */
 .logout-btn {
   position: fixed;
@@ -159,13 +165,12 @@
   line-height: var(--line-height);
 }
 
-/* ── Editor: overlay + textarea stacked ── */
+/* ── Editor: textarea / display ── */
 .diary-editor {
   position: relative;
   flex: 1;
 }
 
-.diary-overlay,
 .diary-textarea,
 .diary-display {
   font-family: 'Caveat', cursive;
@@ -178,44 +183,24 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: pre-wrap;
-}
-
-.diary-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
   color: var(--ink);
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.diary-overlay strong {
-  font-weight: 700;
 }
 
 .diary-textarea {
-  position: relative;
-  z-index: 2;
-  color: transparent;
-  caret-color: #5C3D11;
   background: transparent;
+  caret-color: #5C3D11;
   resize: none;
   outline: none;
   display: block;
   min-height: 100%;
-  -webkit-text-fill-color: transparent;
 }
 
 .diary-textarea::placeholder {
   color: #C8A96E;
-  -webkit-text-fill-color: #C8A96E;
 }
 
 /* ── Display mode: shown when not editing ── */
 .diary-display {
-  color: var(--ink);
   min-height: 100%;
   cursor: text;
   background-color: var(--cream);
@@ -230,17 +215,6 @@
   background-attachment: local;
 }
 
-.diary-display strong {
-  font-weight: 700;
-}
-
-.diary-display .name-avatar {
-  font-style: normal;
-  font-size: 0.8em;
-  margin-left: 0.15em;
-  vertical-align: baseline;
-}
-
 .diary-display .diary-placeholder {
   color: #C8A96E;
 }
@@ -251,11 +225,20 @@
     display: none;
   }
 
-  /* Logout as its own row at top of paper */
+  /* Header becomes a real row at the top of the paper */
+  .page-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px 0;
+    flex-shrink: 0;
+  }
+
+  /* Logout sits beside the settings button in the header row */
   .logout-btn {
     position: static;
     display: block;
-    margin-left: auto;
     flex-shrink: 0;
     padding: 8px 16px;
   }
@@ -295,7 +278,6 @@
     --line-height: 52px;
   }
 
-  .diary-overlay,
   .diary-textarea,
   .diary-display {
     font-size: 1.7rem;
