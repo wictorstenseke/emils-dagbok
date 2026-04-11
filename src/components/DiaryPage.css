@@ -89,6 +89,12 @@
   z-index: 1;
 }
 
+/* Header row holding settings + logout. In landscape its children are
+   position: fixed so the wrapper itself takes no space. */
+.page-header {
+  display: contents;
+}
+
 /* Logout button */
 .logout-btn {
   position: fixed;
@@ -251,11 +257,20 @@
     display: none;
   }
 
-  /* Logout as its own row at top of paper */
+  /* Header becomes a real row at the top of the paper */
+  .page-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px 0;
+    flex-shrink: 0;
+  }
+
+  /* Logout sits beside the settings button in the header row */
   .logout-btn {
     position: static;
     display: block;
-    margin-left: auto;
     flex-shrink: 0;
     padding: 8px 16px;
   }

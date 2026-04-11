@@ -4,6 +4,7 @@ import { today, addDays, formatDisplay, getSeason, mondayOf } from '../lib/date'
 import { usePress } from '../lib/usePress';
 import { highlightNames, highlightNamesWithAvatars } from '../lib/highlightNames';
 import { WeekStrip } from './WeekStrip';
+import { SettingsMenu } from './SettingsMenu';
 import './DiaryPage.css';
 
 const MAX_BACK = 10;
@@ -101,6 +102,18 @@ export function DiaryPage({ onLogout }: Props) {
     storage.touchActivity();
   }
 
+  function handleImported() {
+    // Drop any pending autosave for the now-replaced data, then re-read the
+    // current date so the editor reflects the imported entries.
+    if (saveTimer.current) {
+      clearTimeout(saveTimer.current);
+      saveTimer.current = null;
+    }
+    setEditing(false);
+    setText(storage.getEntry(currentDateRef.current));
+    storage.touchActivity();
+  }
+
   function goBack() {
     if (daysBack < MAX_BACK) navigateTo(addDays(currentDate, -1));
   }
@@ -126,7 +139,10 @@ export function DiaryPage({ onLogout }: Props) {
       </button>
 
       <div class="diary-page">
-        <button class="logout-btn" onClick={onLogout}>Logga ut</button>
+        <div class="page-header">
+          <SettingsMenu onImported={handleImported} />
+          <button class="logout-btn" onClick={onLogout}>Logga ut</button>
+        </div>
 
         <WeekStrip
           currentDate={currentDate}
