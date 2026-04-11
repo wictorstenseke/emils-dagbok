@@ -56,13 +56,6 @@ export function DiaryPage({ onLogout }: Props) {
     setText(storage.getEntry(currentDate));
   }, [currentDate]);
 
-  useEffect(() => {
-    if (editing && textareaRef.current) {
-      textareaRef.current.focus();
-      const len = textareaRef.current.value.length;
-      textareaRef.current.setSelectionRange(len, len);
-    }
-  }, [editing]);
 
   // Auto-resize textarea to fit content
   useEffect(() => {
@@ -158,22 +151,33 @@ export function DiaryPage({ onLogout }: Props) {
             <span class="page-season">{season.emoji} {season.name}</span>
           </div>
           <div class="diary-editor">
-            {editing ? (
-              <textarea
-                class="diary-textarea"
-                ref={textareaRef}
-                value={text}
-                onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
-                onBlur={() => {
-                  flushSave();
-                  setEditing(false);
+            <textarea
+              class="diary-textarea"
+              ref={textareaRef}
+              value={text}
+              onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
+              onBlur={() => {
+                flushSave();
+                setEditing(false);
+              }}
+              placeholder="Skriv vad du vill..."
+              spellcheck={false}
+              autocomplete="off"
+              style={{ display: editing ? 'block' : 'none' }}
+            />
+            {!editing && (
+              <div
+                class="diary-display"
+                onClick={() => {
+                  setEditing(true);
+                  if (textareaRef.current) {
+                    textareaRef.current.style.display = 'block';
+                    textareaRef.current.focus();
+                    const len = textareaRef.current.value.length;
+                    textareaRef.current.setSelectionRange(len, len);
+                  }
                 }}
-                placeholder="Skriv vad du vill..."
-                spellcheck={false}
-                autocomplete="off"
-              />
-            ) : (
-              <div class="diary-display" onClick={() => setEditing(true)}>
+              >
                 {text || <span class="diary-placeholder">Tryck här för att skriva...</span>}
               </div>
             )}

@@ -193,6 +193,7 @@
   outline: none;
   display: block;
   min-height: 100%;
+  touch-action: manipulation;
 }
 
 .diary-textarea::placeholder {
