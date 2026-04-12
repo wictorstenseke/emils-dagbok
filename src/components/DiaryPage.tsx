@@ -55,7 +55,6 @@ export function DiaryPage({ onLogout }: Props) {
     setText(storage.getEntry(currentDate));
   }, [currentDate]);
 
-
   // Auto-resize textarea to fit content
   useEffect(() => {
     const ta = textareaRef.current;
