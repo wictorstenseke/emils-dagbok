@@ -16,7 +16,6 @@ export function DiaryPage({ onLogout }: Props) {
   const [currentDate, setCurrentDate] = useState(today());
   const [text, setText] = useState(() => storage.getEntry(today()));
   const [weekAnchor, setWeekAnchor] = useState(() => mondayOf(today()));
-  const [editing, setEditing] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentDateRef = useRef(currentDate);
   const textRef = useRef(text);
@@ -60,13 +59,31 @@ export function DiaryPage({ onLogout }: Props) {
   // Auto-resize textarea to fit content
   useEffect(() => {
     const ta = textareaRef.current;
-    if (editing && ta) {
-      const scrollY = window.scrollY;
+    if (ta) {
       ta.style.height = 'auto';
       ta.style.height = ta.scrollHeight + 'px';
-      window.scrollTo(0, scrollY);
     }
-  }, [editing, text]);
+  }, [text, currentDate]);
+
+  // Scroll content into view when iOS keyboard appears
+  useEffect(() => {
+    const vv = window.visualViewport;
+    function handleResize() {
+      if (document.activeElement !== textareaRef.current) return;
+      if (vv) {
+        window.scrollTo(0, vv.offsetTop);
+      } else {
+        textareaRef.current?.scrollIntoView({ block: 'nearest' });
+      }
+    }
+    if (vv) {
+      vv.addEventListener('resize', handleResize);
+      return () => vv.removeEventListener('resize', handleResize);
+    } else {
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
 
   function flushSave() {
     if (saveTimer.current) {
@@ -87,7 +104,6 @@ export function DiaryPage({ onLogout }: Props) {
 
   function navigateTo(date: string) {
     flushSave();
-    setEditing(false);
     setCurrentDate(date);
     setWeekAnchor(mondayOf(date));
     storage.touchActivity();
@@ -100,7 +116,6 @@ export function DiaryPage({ onLogout }: Props) {
       clearTimeout(saveTimer.current);
       saveTimer.current = null;
     }
-    setEditing(false);
     setText(storage.getEntry(currentDateRef.current));
     storage.touchActivity();
   }
@@ -156,31 +171,11 @@ export function DiaryPage({ onLogout }: Props) {
               ref={textareaRef}
               value={text}
               onInput={(e) => handleChange((e.target as HTMLTextAreaElement).value)}
-              onBlur={() => {
-                flushSave();
-                setEditing(false);
-              }}
+              onBlur={flushSave}
               placeholder="Skriv vad du vill..."
               spellcheck={false}
               autocomplete="off"
-              style={{ display: editing ? 'block' : 'none' }}
             />
-            {!editing && (
-              <div
-                class="diary-display"
-                onClick={() => {
-                  setEditing(true);
-                  if (textareaRef.current) {
-                    textareaRef.current.style.display = 'block';
-                    textareaRef.current.focus();
-                    const len = textareaRef.current.value.length;
-                    textareaRef.current.setSelectionRange(len, len);
-                  }
-                }}
-              >
-                {text || <span class="diary-placeholder">Tryck här för att skriva...</span>}
-              </div>
-            )}
           </div>
         </div>
       </div>

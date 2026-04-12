@@ -1,0 +1,40 @@
+{
+  "planPath": "docs/superpowers/plans/2026-04-12-textarea-ipad-improvements.md",
+  "tasks": [
+    {
+      "id": 9,
+      "subject": "Task 1: Remove editing toggle and clean up CSS",
+      "status": "completed",
+      "description": "**Goal:** Delete the `editing` state, `diary-display` div, and all associated `.diary-display` CSS — leaving the textarea always visible.\n\n**Files:**\n- Modify: `src/components/DiaryPage.tsx`\n- Modify: `src/components/DiaryPage.css`\n\n**Acceptance Criteria:**\n- [ ] `editing` state and all `setEditing` calls are gone from `DiaryPage.tsx`\n- [ ] `diary-display` div and its `onClick` handler are gone\n- [ ] Textarea has no `display` inline style\n- [ ] No `.diary-display` selector appears anywhere in `DiaryPage.css`\n- [ ] `npm run build` exits 0 with no TypeScript errors\n\n**Verify:** `npm run build` → `✓ built in`",
+      "metadata": {
+        "files": ["src/components/DiaryPage.tsx", "src/components/DiaryPage.css"],
+        "verifyCommand": "npm run build",
+        "acceptanceCriteria": [
+          "editing state and all setEditing calls are gone",
+          "diary-display div and onClick handler are gone",
+          "textarea has no display inline style",
+          "no .diary-display selector in DiaryPage.css",
+          "npm run build exits 0"
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "subject": "Task 2: Fix auto-resize and add visualViewport keyboard scroll",
+      "status": "completed",
+      "blockedBy": [],
+      "description": "**Goal:** Resize textarea correctly on load/navigation, and scroll content into view when the iOS keyboard appears.\n\n**Files:**\n- Modify: `src/components/DiaryPage.tsx`\n\n**Acceptance Criteria:**\n- [ ] Auto-resize useEffect has no editing guard and runs on both text and currentDate changes\n- [ ] A visualViewport resize listener is registered on mount and cleaned up on unmount\n- [ ] When keyboard appears and textarea is focused, window.scrollTo(0, visualViewport.offsetTop) is called\n- [ ] npm run build exits 0\n\n**Verify:** `npm run build` → `✓ built in`",
+      "metadata": {
+        "files": ["src/components/DiaryPage.tsx"],
+        "verifyCommand": "npm run build",
+        "acceptanceCriteria": [
+          "auto-resize useEffect has no editing guard",
+          "runs on text and currentDate changes",
+          "visualViewport resize listener registered and cleaned up",
+          "npm run build exits 0"
+        ]
+      }
+    }
+  ],
+  "lastUpdated": "2026-04-12T12:00:00Z"
+}

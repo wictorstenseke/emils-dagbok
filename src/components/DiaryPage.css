@@ -165,14 +165,13 @@
   line-height: var(--line-height);
 }
 
-/* ── Editor: textarea / display ── */
+/* ── Editor: textarea ── */
 .diary-editor {
   position: relative;
   flex: 1;
 }
 
-.diary-textarea,
-.diary-display {
+.diary-textarea {
   font-family: 'Caveat', cursive;
   font-size: 2rem;
   line-height: var(--line-height);
@@ -197,26 +196,6 @@
 }
 
 .diary-textarea::placeholder {
-  color: #C8A96E;
-}
-
-/* ── Display mode: shown when not editing ── */
-.diary-display {
-  min-height: 100%;
-  cursor: text;
-  background-color: var(--cream);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent calc(var(--line-height) - 1px),
-    var(--line-color) calc(var(--line-height) - 1px),
-    var(--line-color) var(--line-height)
-  );
-  background-position: 0 calc(8px - var(--line-height));
-  background-attachment: local;
-}
-
-.diary-display .diary-placeholder {
   color: #C8A96E;
 }
 
@@ -279,8 +258,7 @@
     --line-height: 52px;
   }
 
-  .diary-textarea,
-  .diary-display {
+  .diary-textarea {
     font-size: 1.7rem;
   }
 
