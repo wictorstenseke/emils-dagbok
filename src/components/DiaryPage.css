@@ -183,9 +183,6 @@
   overflow-wrap: break-word;
   white-space: pre-wrap;
   color: var(--ink);
-}
-
-.diary-textarea {
   background: transparent;
   caret-color: #5C3D11;
   resize: none;

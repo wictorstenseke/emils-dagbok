@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { storage, type ExportData } from '../storage/adapter';
 import { today } from '../lib/date';
+import { usePress } from '../lib/usePress';
 import './SettingsMenu.css';
 
 interface Props {
@@ -50,8 +51,9 @@ function parseImport(raw: string): Record<string, string> {
 export function SettingsMenu({ onImported }: Props) {
   const [open, setOpen] = useState(false);
   const [toast, setToast] = useState<Toast>(null);
-  const [pressed, setPressed] = useState(false);
-  const [pressedItem, setPressedItem] = useState<string | null>(null);
+  const gearPress = usePress();
+  const exportPress = usePress();
+  const importPress = usePress();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -136,12 +138,9 @@ export function SettingsMenu({ onImported }: Props) {
   return (
     <div class="settings-wrapper" ref={wrapperRef}>
       <button
-        class={`settings-btn ${pressed ? 'pressed' : ''}`}
+        class={`settings-btn ${gearPress.pressed ? 'pressed' : ''}`}
         onClick={() => setOpen((v) => !v)}
-        onPointerDown={() => setPressed(true)}
-        onPointerUp={() => setPressed(false)}
-        onPointerLeave={() => setPressed(false)}
-        onPointerCancel={() => setPressed(false)}
+        {...gearPress.pressProps}
         aria-label="Inställningar"
         aria-expanded={open}
       >
@@ -151,25 +150,19 @@ export function SettingsMenu({ onImported }: Props) {
       {open && (
         <div class="settings-menu" role="menu">
           <button
-            class={`settings-item ${pressedItem === 'export' ? 'pressed' : ''}`}
+            class={`settings-item ${exportPress.pressed ? 'pressed' : ''}`}
             role="menuitem"
             onClick={handleExport}
-            onPointerDown={() => setPressedItem('export')}
-            onPointerUp={() => setPressedItem(null)}
-            onPointerLeave={() => setPressedItem(null)}
-            onPointerCancel={() => setPressedItem(null)}
+            {...exportPress.pressProps}
           >
             <span class="settings-item-icon">⬇️</span>
             <span>Exportera</span>
           </button>
           <button
-            class={`settings-item ${pressedItem === 'import' ? 'pressed' : ''}`}
+            class={`settings-item ${importPress.pressed ? 'pressed' : ''}`}
             role="menuitem"
             onClick={handleImportClick}
-            onPointerDown={() => setPressedItem('import')}
-            onPointerUp={() => setPressedItem(null)}
-            onPointerLeave={() => setPressedItem(null)}
-            onPointerCancel={() => setPressedItem(null)}
+            {...importPress.pressProps}
           >
             <span class="settings-item-icon">⬆️</span>
             <span>Importera</span>

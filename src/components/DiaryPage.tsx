@@ -109,12 +109,9 @@ export function DiaryPage({ onLogout }: Props) {
   }
 
   function handleImported() {
-    // Drop any pending autosave for the now-replaced data, then re-read the
-    // current date so the editor reflects the imported entries.
-    if (saveTimer.current) {
-      clearTimeout(saveTimer.current);
-      saveTimer.current = null;
-    }
+    // Discard pending autosave (data was replaced), then re-read.
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = null;
     setText(storage.getEntry(currentDateRef.current));
     storage.touchActivity();
   }
